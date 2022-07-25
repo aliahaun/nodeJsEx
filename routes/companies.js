@@ -1,31 +1,16 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
-const Joigoose = require('joigoose')(mongoose, null, {
-    _id: false,
-    timestamps: false,
-  });
-var {companyShema} = require('../models/mongooseShema')
+var Companies = require('../models/Company');
 const express = require('express');
 const router = express.Router();
 
 router.use(express.json());
-
-var ComponiesSchema = new mongoose.Schema(Joigoose.convert(companyShema));
-const Companies = mongoose.model('companies', ComponiesSchema);
-
-
 router.get('/', async (req, res) => {
     const companies = await Companies.find();
     res.send(companies);
 } );
 
 router.post('/', async (req, res) => {
-    try{
-    const {error, value} = companyShema.validate(req.body)
-    if(error) {
-        return res.status(400).send(error.message);
-    }
-    
     let companies = new Companies({
         domain: req.body.domain,
         email: req.body.email,
@@ -47,15 +32,8 @@ router.post('/', async (req, res) => {
 
     companies = await companies.save();
     res.send(companies);
-} catch (err) {
-    if(err.isJoi === true){
-        err.status = 422;
-        console.log(err.message);
-    }
-    next(err);
-}
-});
 
+});
 router.put('/:id', async (req, res) => {
 
     const companies = await Companies.findByIdAndUpdate(req.params.id, { 
@@ -82,12 +60,9 @@ router.put('/:id', async (req, res) => {
       if (!companies) return res.status(404).send('The company  with the given ID was not found.');
     res.send(companies);
 });
-
 router.delete('/:id', async (req, res)=> {
     const companies = await Companies.findByIdAndRemove(req.params.id);
     if (!companies) return res.status(404).send('The company  with the given ID was not found.');
     res.send(companies);
     });
-
-
 module.exports = router;
