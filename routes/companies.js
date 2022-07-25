@@ -4,41 +4,12 @@ const Joigoose = require('joigoose')(mongoose, null, {
     _id: false,
     timestamps: false,
   });
+var {companyShema} = require('../models/mongooseShema')
 const express = require('express');
 const router = express.Router();
 
 router.use(express.json());
 
-const type_compteN= 'Type compte';
-const tvaN= 'TVA';
-const team_sizeN= 'Team size';
-const team_nameN= 'Team name';
-const sirretN= 'Sirret';
-const form_juridiqueN= 'Form juridique';
-const email_contactN= 'Email contact';
-const description_activityN= 'Description activity';
-const adressN= 'Adress';
-const zipN= 'Zip';
-var companyShema = Joi.object().keys({
-        domain: Joi.string().required()
-        ,
-        email:Joi.string().email().required(),
-        name:Joi.string().min(3).required(),
-        siren: Joi.number().required(),
-        account_plan:Joi.string().uppercase().required(),
-        adress: Joi.string().required(),
-        description_activity:Joi.string().required(),
-        email_contact:Joi.string().required(),
-        form_juridique:Joi.string().uppercase().required(),
-        sector_activity:Joi.string().required(),
-            // enum:['Agroalimentaire', 'Banque / Assurance', 'Bois / Papier / Carton / Imprimerie', 'BTP / Matériaux de construction', 'Chimie / Parachimie', 'Commerce / Négoce / Distribution', 'Autre']
-        sirret:Joi.string().required(),
-        team_name:Joi.string().required(),
-        team_size:Joi.string().required(),
-        tva:Joi.number().required(),
-        type_compte:Joi.string().required(),
-        zip:Joi.number().required()
-    });
 var ComponiesSchema = new mongoose.Schema(Joigoose.convert(companyShema));
 const Companies = mongoose.model('companies', ComponiesSchema);
 
