@@ -1,9 +1,11 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const mongoose = require('mongoose');
 const companies = require('./routes/companies');
 const express = require('express');
 const hax = express();
 
-mongoose.connect('mongodb://localhost:27017/hax', {
+mongoose.connect(process.env.DB_CONNECTION,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Connected to Mongodb'))
